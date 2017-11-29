@@ -2,7 +2,7 @@
 
 const init = () => {
 
-  console.log(`Hello, gravity`)
+  console.log(`Hello, gravity`);
 
 };
 
