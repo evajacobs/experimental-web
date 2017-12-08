@@ -1,49 +1,16 @@
 {
 
   const THREE = require(`three`);
+  const OBJLoader = require(`three-obj-loader`);
+  OBJLoader(THREE);
 
   const Colors = {
-    white: 0xffffff,
     red: 0xf25346,
   };
 
   const init = () => {
     createScene();
-
-
-        //
-        // let loader = new THREE.OBJLoader();
-        //
-        // loader.load(
-        //
-        //   'assets/astronaut.obj',
-        //
-        //   function ( object ) {
-        //     object.scale.x = 0.1
-        //     object.scale.y = 0.1
-        //     object.scale.z = 0.1
-        //     object.position.x = 2000
-        //     object.position.y = -700
-        //     object.position.z = 700
-        //
-        //     scene.add( object );
-        //   },
-        //
-        //   function ( xhr ) {
-        //
-        //     console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-        //
-        //   },
-        //
-        //   function ( error ) {
-        //
-        //     console.log( 'An error happened' );
-        //
-        //   }
-        // );
-
-
-
+    createPlayer();
 
     createLights();
     //createParticle();
@@ -72,35 +39,26 @@
   const particles = [], ennemies = [], triangles = [];
 
   let ennemy, triangle;
+  let player;
 
 
 
   const createScene = () => {
+
     HEIGHT = window.innerHeight;
     WIDTH = window.innerWidth;
 
     scene = new THREE.Scene();
 
-
     aspectRatio = WIDTH / HEIGHT;
-    fieldOfView = 80;
+    fieldOfView = 60;
     nearPlane = 1;
     farPlane = 4000;
+    camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
 
-    camera = new THREE.PerspectiveCamera(
-      fieldOfView,
-      aspectRatio,
-      nearPlane,
-      farPlane
-      );
+    camera.position.set(0, 0, 2000);
 
-    camera.position.z = 2000;
-
-
-    renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: true
-    });
+    renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
 
     renderer.setSize(WIDTH, HEIGHT);
 
@@ -109,10 +67,7 @@
     container = document.querySelector(`.world`);
     container.appendChild(renderer.domElement);
 
-    //Listen to the screen: if the user resizes it
-    //we have to update the camera and the renderer size
     window.addEventListener(`resize`, handleWindowResize, false);
-
 
   };
 
@@ -122,6 +77,22 @@
     renderer.setSize(WIDTH, HEIGHT);
     camera.aspect = WIDTH / HEIGHT;
     camera.updateProjectionMatrix();
+  };
+
+  const createPlayer = () => {
+
+
+    const loader = new THREE.OBJLoader();
+
+    loader.load(`assets/astronaut.obj`,
+
+      object => {
+        player = object;
+        player.scale.set(0.1, 0.1, 0.1);
+        player.position.set(1600, - 1300, 700);
+        scene.add(object);
+      },
+    );
   };
 
 
