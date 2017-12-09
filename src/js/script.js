@@ -13,11 +13,9 @@
     createPlayer();
 
     createLights();
-    //createParticle();
-    createEnnemy();
+    createEnemy();
     createTriangle();
 
-    // document.addEventListener(`mousemove`, onMouseMove, false);
     setInterval(loop, 1000 / 30);
 
   };
@@ -96,11 +94,6 @@
   };
 
 
-  // const onMouseMove = event => {
-  //   mouseX = event.clientX;
-  //   mouseY = event.clientY;
-  // };
-
   const createLights = () => {
 
     hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9);
@@ -124,41 +117,6 @@
     scene.add(shadowLight);
   };
 
-
-  // const createParticle = () => {
-  //
-  //   for (let i = - 1000;i < 1000;i += 20) {
-  //     this.mesh = new THREE.Object3D();
-  //
-  //     const geomHeigt = (Math.random() * 25) + 10;
-  //
-  //     const geomParticle = new THREE.BoxGeometry(geomHeigt, geomHeigt, geomHeigt, 1, 1, 1);
-  //     const matParticle = new THREE.MeshPhongMaterial({color: Colors.white, shading: THREE.FlatShading});
-  //     this.oneParticle = new THREE.Mesh(geomParticle, matParticle);
-  //     this.oneParticle.castShadow = true;
-  //     this.oneParticle.receiveShadow = true;
-  //
-  //     this.oneParticle.position.x = Math.random() * 1000 - 500;
-  //     this.oneParticle.position.y = Math.random() * 1000 - 500;
-  //     this.oneParticle.position.z = i;
-  //
-  //   // this.oneParticle.scale.x = this.oneParticle.scale.y = 10;
-  //
-  //   //this.mesh.add(this.oneParticle);
-  //
-  //     scene.add(this.oneParticle);
-  //
-  //     particles.push(this.oneParticle);
-  //
-  //   }
-  //
-  //
-  //   // particle = new Particle();
-  //   // particle.mesh.position.y = 100;
-  //   // scene.add(particle.mesh);
-  // };
-
-
   const updateParcticle = i => {
 
     particles[i].rotation.x += Math.random() * - 0.05;
@@ -171,7 +129,54 @@
 
   };
 
-  const createEnnemy = () => {
+  class Enemy {
+
+    set mesh(mesh) {
+      this._mesh = mesh;
+    }
+
+    get mesh() {
+      return this._mesh;
+    }
+
+    randomPosition() {
+      this._mesh.position.x = Math.random() * 1000 - 500;
+      this._mesh.position.y = Math.random() * 1000 - 500;
+      //this._mesh.position.z = Math.random() * 10;
+      this._mesh.position.z = Math.random() * 10;
+    }
+  }
+
+  class Planet extends Enemy {
+
+    constructor() {
+      super();
+      //create an enemy
+      const geomEnemy = new THREE.TetrahedronGeometry(8, 2);
+
+      // create a material
+      const matEnemy = new THREE.MeshPhongMaterial({
+        color: Colors.red,
+        shininess: 0,
+        specular: 0xffffff,
+        shading: THREE.FlatShading
+      });
+
+      super.mesh = new THREE.Mesh(geomEnemy, matEnemy);
+
+      // set the position of each enemy randomly
+      super.randomPosition();
+    }
+  }
+
+  const createEnemy = () => {
+    for (let i = - 1000;i < 1000;i += 20) {
+      const planet = new Planet();
+      scene.add(planet.mesh);
+    }
+  };
+
+  /*const createEnnemy = () => {
 
     for (let i = - 1000;i < 1000;i += 20) {
       this.mesh = new THREE.Object3D();
@@ -197,7 +202,7 @@
 
     }
 
-  };
+  };*/
 
 
   const updateEnnemy = i => {
