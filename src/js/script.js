@@ -130,21 +130,21 @@
     }
     renderer.render(scene, camera);
 
-    const originPoint = player.position.clone();
+    const originPoint = player.mesh.position.clone();
 
-    for (let vertexIndex = 0;vertexIndex < player.geometry.vertices.length;vertexIndex ++) {
-      const localVertex = player.geometry.vertices[vertexIndex].clone();
-      const globalVertex = localVertex.applyMatrix4(player.matrix);
-      const directionVector = globalVertex.sub(player.position);
+    for (let vertexIndex = 0;vertexIndex < player.mesh.children[0].geometry.vertices.length;vertexIndex ++) {
+      const localVertex = player.mesh.children[0].geometry.vertices[vertexIndex].clone();
+      const globalVertex = localVertex.applyMatrix4(player.mesh.matrix);
+      const directionVector = globalVertex.sub(player.mesh.position);
 
       const ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
       const collisionResultsEnemies = ray.intersectObjects(enemies);
       const collisionResultsTriangles = ray.intersectObjects(triangles);
       if (collisionResultsEnemies.length > 0 && collisionResultsEnemies[0].distance < directionVector.length())
-        console.log(collisionResultsEnemies);
+        console.log("hit");
 
       if (collisionResultsTriangles.length > 0 && collisionResultsTriangles[0].distance < directionVector.length())
-        console.log(collisionResultsTriangles);
+        console.log("hit");
 
 
     }
