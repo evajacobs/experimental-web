@@ -1,12 +1,11 @@
-{
-
   const THREE = require(`three`);
   const OBJLoader = require(`three-obj-loader`);
   OBJLoader(THREE);
 
-  // const Colors = {
-  //   red: 0xf25346,
-  // };
+  import createPlayer from './lib/createPlayer'
+  import createEnemy from './lib/createEnemy'
+  import createTriangle from './lib/createTriangle'
+  import createLights from './lib/createLights'
 
   const init = () => {
     navigator.mediaDevices.getUserMedia({video: true})
@@ -15,11 +14,10 @@
     });
 
     createScene();
-    createPlayer();
-
-    createLights();
-    createEnemy();
-    createTriangle();
+    player = createPlayer(THREE, scene, player );
+    createLights(THREE, scene);
+    enemies = createEnemy(THREE, enemies, scene);
+    triangles = createTriangle(THREE, triangles, scene);
     createLives();
 
     setInterval(loop, 1000 / 30);
@@ -35,12 +33,9 @@
     HEIGHT,
     WIDTH,
     renderer,
-    container,
-    hemisphereLight,
-    shadowLight,
-    particle;
+    container;
 
-  const particles = [], enemies = [], triangles = [];
+  let enemies = [], triangles = [];
 
   let currentEnemy, triangle;
   let player;
@@ -98,184 +93,6 @@
     camera.updateProjectionMatrix();
   };
 
-  const createPlayer = () => {
-  player = new Player();
-  scene.add(player.mesh);
-};
-
-
-class Player {
-  constructor() {
-    this.mesh = new THREE.Object3D();
-    this.mesh.name = `pilot`;
-
-    const geom = new THREE.BoxGeometry(200, 200, 200);
-    const mat = new THREE.MeshPhongMaterial({
-      color: 0xf1c40f,
-      transparent: true,
-      opacity: 1,
-      shininess: 10,
-      side: THREE.DoubleSide
-    });
-    const body = new THREE.Mesh(geom, mat);
-    body.position.set(0,-1000, 0);
-    this.mesh.add(body);
-  }
-}
-
-  // const createPlayer = () => {
-  //
-  //
-  //   // const loader = new THREE.OBJLoader();
-  //   //
-  //   // loader.load(`assets/astronaut.obj`,
-  //   //
-  //   //   object => {
-  //   //     player = object;
-  //   //     player.scale.set(0.1, 0.1, 0.1);
-  //   //     player.position.set(1600, - 1300, 1000);
-  //   //     scene.add(object);
-  //   //   },
-  //   // );
-  //
-  //   //create an enemy
-  //   const geomEnemy = new THREE.TetrahedronGeometry(100, 4);
-  //
-  //   // create a material
-  //   const matEnemy = new THREE.MeshPhongMaterial({
-  //     color: 0xf25346,
-  //     shininess: 0,
-  //     specular: 0xffffff
-  //   });
-  //
-  //
-  //   player = new THREE.Mesh(geomEnemy, matEnemy);
-  //   player.castShadow = true;
-  //   player.receiveShadow = true;
-  //
-  //   player.position.set(0, 0, 1500);
-  //   scene.add(player);
-  // };
-
-
-  const createLights = () => {
-
-    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9);
-
-    shadowLight = new THREE.DirectionalLight(0xffffff, .9);
-
-    shadowLight.position.set(150, 350, 350);
-    shadowLight.castShadow = true;
-
-    shadowLight.shadow.camera.left = - 400;
-    shadowLight.shadow.camera.right = 400;
-    shadowLight.shadow.camera.top = 400;
-    shadowLight.shadow.camera.bottom = - 400;
-    shadowLight.shadow.camera.near = 1;
-    shadowLight.shadow.camera.far = 1000;
-
-    shadowLight.shadow.mapSize.width = 2048;
-    shadowLight.shadow.mapSize.height = 2048;
-
-    scene.add(hemisphereLight);
-    scene.add(shadowLight);
-  };
-
-  const updateParcticle = i => {
-
-    particles[i].rotation.x += Math.random() * - 0.05;
-    particles[i].rotation.y += Math.random() *  - 0.05;
-
-    particle = particles[i];
-
-    particle.position.z +=  10;
-
-
-    if (particle.position.z > 2000) particle.position.z -= 2000;
-
-  };
-
-  class Enemy {
-
-    set mesh(mesh) {
-      this._mesh = mesh;
-    }
-
-    get mesh() {
-      return this._mesh;
-    }
-
-    randomPosition() {
-      this._mesh.position.x = Math.random() * 1000 - 500;
-      this._mesh.position.y = Math.random() * -1000 - 500;
-    }
-  }
-
-  class Planet extends Enemy {
-
-    constructor() {
-      super();
-      //create an enemy
-      const geomEnemy = new THREE.TetrahedronGeometry(30, 4);
-
-      // create a material
-      const loader = new THREE.TextureLoader();
-      const texture1 = loader.load(`assets/planet.jpeg`);
-      const matEnemy = new THREE.MeshPhongMaterial({
-        map: texture1,
-        shininess: 0,
-        specular: 0xffffff
-      });
-
-      super.mesh = new THREE.Mesh(geomEnemy, matEnemy);
-      super.mesh.castShadow = true;
-      super.mesh.receiveShadow = true;
-
-      // set the position of each enemy randomly
-      super.randomPosition();
-    }
-  }
-
-  class Rock extends Enemy {
-
-    constructor() {
-      super();
-      //create an enemy
-      const geomEnemy = new THREE.IcosahedronBufferGeometry(20, 0);
-
-      // create a material
-      const loader = new THREE.TextureLoader();
-      const texture1 = loader.load(`assets/rock.jpg`);
-      const matEnemy = new THREE.MeshPhongMaterial({
-        map: texture1,
-        shininess: 0,
-        specular: 0xffffff
-      });
-
-      super.mesh = new THREE.Mesh(geomEnemy, matEnemy);
-      super.mesh.castShadow = true;
-      super.mesh.receiveShadow = true;
-
-      // set the position of each enemy randomly
-      super.randomPosition();
-    }
-  }
-
-  const createEnemy = () => {
-    for (let i = - 1000;i < 1000;i += 150) {
-      const planet = new Planet();
-      planet.mesh.position.z = i;
-      scene.add(planet.mesh);
-      enemies.push(planet.mesh);
-    }
-
-    for (let i = - 1000;i < 1000;i += 150) {
-      const rock = new Rock();
-      rock.mesh.position.z = i;
-      scene.add(rock.mesh);
-      enemies.push(rock.mesh);
-    }
-  };
 
   const moveEnemy = i => {
     if (enemies) {
@@ -290,35 +107,7 @@ class Player {
 
   };
 
-  const createTriangle = () => {
-
-    for (let i = - 1000;i < 1000;i += 20) {
-      //this.mesh = new THREE.Object3D();
-
-      const geomTriangle = new THREE.TetrahedronGeometry(5, 0);
-      const matTriangle = new THREE.MeshPhongMaterial({
-        color: 0x009999,
-        shininess: 0,
-        specular: 0xffffff
-      });
-      this.oneTriangle = new THREE.Mesh(geomTriangle, matTriangle);
-      this.oneTriangle.castShadow = true;
-      this.oneTriangle.receiveShadow = true;
-
-      this.oneTriangle.position.x = Math.random() * 1000 - 500;
-      this.oneTriangle.position.y = Math.random() * -1000 - 500;
-      this.oneTriangle.position.z = i;
-
-      scene.add(this.oneTriangle);
-
-      particles.push(this.oneTriangle);
-
-    }
-
-  };
-
-
-  const updateTriangle = i => {
+  const moveTriangle = i => {
 
     triangles[i].rotation.x += Math.random() * - 0.05;
     triangles[i].rotation.y += Math.random() *  - 0.05;
@@ -331,16 +120,12 @@ class Player {
 
   const loop = () => {
 
-    for (let i = 0;i < particles.length;i ++) {
-      updateParcticle(i);
-
-    }
     for (let i = 0;i < enemies.length;i ++) {
       moveEnemy(i);
     }
 
     for (let i = 0;i < triangles.length;i ++) {
-      updateTriangle(i);
+      moveTriangle(i);
 
     }
     renderer.render(scene, camera);
@@ -670,4 +455,3 @@ const clickHandlerStart = () => {
 
 
   init();
-}
