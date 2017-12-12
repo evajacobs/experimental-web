@@ -379,7 +379,10 @@ const clickHandlerStart = () => {
 
   const drawSeconds = () =>{
     ang = 0.007 * (( currentSec * 1000 ) );
-    ctx.fillStyle = `rgb(221,180,45)`;
+    var grd=ctx.createLinearGradient(0,170,360,0);
+    grd.addColorStop(0,"#0071bc");
+    grd.addColorStop(1,"#00ffff");
+    ctx.fillStyle = grd;
     ctx.beginPath();
     ctx.moveTo( 300, 300 );
     ctx.lineTo( 300, 100 );
