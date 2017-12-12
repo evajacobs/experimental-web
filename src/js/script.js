@@ -241,12 +241,14 @@ const clickHandlerStart = () => {
         playButton[0].addEventListener(`click`, clickHandlerStart);
         playButton[0].style.opacity = 1;
         playButton[0].style.cursor = `pointer`;
+        //playButton[0].classList.add("play-button-active");
 
       } else {
         text[0].innerHTML = `We're looking for your face ...`;
         playButton[0].removeEventListener(`click`, clickHandlerStart);
         playButton[0].style.opacity = 0.3;
         playButton[0].style.cursor = `default`;
+        //playButton[0].classList.remove("play-button-active");
       }
 
       if(worldOn){
