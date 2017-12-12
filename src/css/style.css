@@ -25,6 +25,12 @@ h1 {
   opacity: 0;
 }
 
+.score {
+  position: absolute;
+  right: 10rem;
+  top: 3rem;
+}
+
 .cameraControl {
   height: 100vh;
   width: 100vw;

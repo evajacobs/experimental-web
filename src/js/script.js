@@ -22,6 +22,12 @@
 
     setInterval(loop, 1000 / 30);
 
+    scoreElement = document.createElement("h1");
+    scoreElement.classList.add("score");
+    scoreElement.innerHTML = "score: " + score;
+    const parrent = document.getElementsByClassName("world")[0];
+    parrent.appendChild(scoreElement);
+
   };
 
   let scene,
@@ -39,6 +45,8 @@
 
   let currentEnemy, triangle;
   let player;
+  let scoreElement;
+  let score = 0;
 
 
   const createLives = () => {
@@ -419,6 +427,9 @@ const clickHandlerStart = () => {
 
     if(lastItem[emotions.indexOf(emotion)].value > 0.2){
       emotionContainer[0].innerHTML = `<div> <img class="emotionResultImg" src="assets/svg/correct.svg" alt=""/> <p class="emotionResultText"> ${emotion} face check<p/> </div>`;
+      score += 100;
+      scoreElement.innerHTML = "score: " + score;
+      console.log(score);
     }else {
       emotionContainer[0].innerHTML = `<div> <img class="emotionResultImg" src="assets/svg/cancel.svg" alt="" /> <p class="emotionResultText" >Not ${emotion} enough<p/> <div/>`;
     }
