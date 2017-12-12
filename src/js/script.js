@@ -28,6 +28,8 @@
     const parrent = document.getElementsByClassName("world")[0];
     parrent.appendChild(scoreElement);
 
+
+
   };
 
   let scene,
@@ -47,22 +49,20 @@
   let player;
   let scoreElement;
   let score = 0;
+  let lives = 3;
 
 
   const createLives = () => {
-    // instantiate loader
-    const loader = new THREE.ImageLoader();
-    // load a image resource
-    loader.load(`assets/liveFull.png`,
+    const livesElement = document.createElement("div");
+    livesElement.classList.add("lives");
+    const parrent = document.getElementsByClassName("world")[0];
+    parrent.appendChild(livesElement);
 
-    image => {
-      const canvas = document.querySelector(`.world canvas`);
-      const lives = document.createElement(`canvas`);
-      const context = lives.getContext(`2d`);
-      context.drawImage(image, 120, 120);
-      canvas.appendChild(lives);
+    for(let i = 0; i < lives; i++){
+      const oneLive = document.createElement("img");
+      oneLive.setAttribute("src", "assets/liveFull.png");
+      livesElement.appendChild(oneLive);
     }
-  );
   };
 
   const createScene = () => {

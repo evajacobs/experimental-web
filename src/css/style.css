@@ -27,8 +27,20 @@ h1 {
 
 .score {
   position: absolute;
-  right: 10rem;
+  right: 7rem;
+  top: 4.5rem;
+}
+
+.lives {
+  position: absolute;
+  display: flex;
+  right: 20rem;
   top: 3rem;
+}
+
+.lives img {
+  height: 5rem;
+  margin: .5rem;
 }
 
 .cameraControl {
