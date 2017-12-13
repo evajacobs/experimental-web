@@ -10,7 +10,7 @@ class Player {
     this.mesh = new THREE.Object3D();
     this.mesh.name = `pilot`;
 
-    const geom = new THREE.BoxGeometry(200, 200, 200);
+    const geom = new THREE.BoxGeometry(100, 100, 100);
     const mat = new THREE.MeshPhongMaterial({
       color: 0xf1c40f,
       transparent: true,
@@ -19,7 +19,7 @@ class Player {
       side: THREE.DoubleSide
     });
     const body = new THREE.Mesh(geom, mat);
-    body.position.set(0,-1000, 0);
+    body.position.set(0,-1200, 1400);
     this.mesh.add(body);
   }
 }

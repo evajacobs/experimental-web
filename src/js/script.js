@@ -16,18 +16,20 @@
 
     createScene();
     player = createPlayer(THREE, scene, player );
+    window.threePlayer = player;
     createLights(THREE, scene);
     enemies = createEnemy(THREE, enemies, scene);
     triangles = createTriangle(THREE, triangles, scene);
     createLives();
 
-    setInterval(loop, 1000 / 30);
+    requestAnimationFrame(loop);
 
     scoreElement = document.createElement("h1");
     scoreElement.classList.add("score");
     scoreElement.innerHTML = "score: " + score;
     const parrent = document.getElementsByClassName("world")[0];
     parrent.appendChild(scoreElement);
+
 
   };
 
@@ -56,7 +58,7 @@
     livesElement.classList.add("lives");
     const parrent = document.getElementsByClassName("world")[0];
     parrent.appendChild(livesElement);
-
+    livesElement.innerHTML = "";
     for(let i = 0; i < lives; i++){
       const oneLive = document.createElement("img");
       oneLive.setAttribute("src", "assets/liveFull.png");
@@ -138,7 +140,10 @@
       const secondBB = new THREE.Box3().setFromObject(secondObject.mesh);
 
       let collision = firstBB.intersectsBox(secondBB);
-      console.log(collision);
+      if(collision) {
+        lives --;
+        createLives();
+      }
     }
 
     for (let i = 0;i < triangles.length;i ++) {
@@ -147,26 +152,8 @@
     }
     renderer.render(scene, camera);
 
+    requestAnimationFrame(loop);
 
-
-    // const originPoint = player.mesh.position.clone();
-    //
-    // for (let vertexIndex = 0;vertexIndex < player.mesh.children[0].geometry.vertices.length;vertexIndex ++) {
-    //   const localVertex = player.mesh.children[0].geometry.vertices[vertexIndex].clone();
-    //   const globalVertex = localVertex.applyMatrix4(player.mesh.matrix);
-    //   const directionVector = globalVertex.sub(player.mesh.position);
-    //
-    //   const ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
-    //   const collisionResultsEnemies = ray.intersectObjects(enemies);
-    //   const collisionResultsTriangles = ray.intersectObjects(triangles);
-    //   if (collisionResultsEnemies.length > 0 && collisionResultsEnemies[0].distance < directionVector.length())
-    //     console.log("hit");
-    //
-    //   if (collisionResultsTriangles.length > 0 && collisionResultsTriangles[0].distance < directionVector.length())
-    //     console.log("hit");
-    //
-    //
-    // }
   };
 
 
@@ -287,12 +274,12 @@ const clickHandlerStart = () => {
         }
 
 
-        if(Math.ceil(ctrack.getCurrentPosition()[41][1]) > 91 && player.mesh.position.y > -window.innerHeight ){
-          player.mesh.position.y = -map_rangeY(Math.ceil(ctrack.getCurrentPosition()[41][1]));
-
-        } else if(Math.ceil(ctrack.getCurrentPosition()[41][1]) < 81 && player.mesh.position.y < window.innerHeight){
-        player.mesh.position.y = -map_rangeY(Math.ceil(ctrack.getCurrentPosition()[41][1]));
-        }
+        // if(Math.ceil(ctrack.getCurrentPosition()[41][1]) > 91 && player.mesh.position.y > -window.innerHeight ){
+        //   player.mesh.position.y = -map_rangeY(Math.ceil(ctrack.getCurrentPosition()[41][1]));
+        //
+        // } else if(Math.ceil(ctrack.getCurrentPosition()[41][1]) < 81 && player.mesh.position.y < window.innerHeight){
+        // player.mesh.position.y = -map_rangeY(Math.ceil(ctrack.getCurrentPosition()[41][1]));
+        // }
       }
     }
     const cp = ctrack.getCurrentParameters();
@@ -316,13 +303,8 @@ const clickHandlerStart = () => {
   };
 
   const map_range = (value) => {
-    return -window.innerWidth + (window.innerWidth - -window.innerWidth) * (value - 30) / (200 - 30);
+    return -500 + (500 - -500) * (value - 30) / (200 - 30);
   }
-
-  const map_rangeY = (value) => {
-    return 10 + (window.innerWidth - 10) * (value - 30) / (143 - 30);
-  }
-
 
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
@@ -412,7 +394,6 @@ const clickHandlerStart = () => {
   }
 
   const drawCircle = () =>{
-    console.log('test');
     ctx.globalCompositeOperation='destination-over';
     ctx.fillStyle = 'white';
     ctx.beginPath();
