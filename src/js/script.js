@@ -29,8 +29,6 @@
     const parrent = document.getElementsByClassName("world")[0];
     parrent.appendChild(scoreElement);
 
-
-
   };
 
   let scene,
@@ -129,8 +127,18 @@
 
   const loop = () => {
 
+
     for (let i = 0;i < enemies.length;i ++) {
       moveEnemy(i);
+      let firstObject = enemies[i];
+      let secondObject = player;
+
+      const firstBB = new THREE.Box3().setFromObject(firstObject);
+
+      const secondBB = new THREE.Box3().setFromObject(secondObject.mesh);
+
+      let collision = firstBB.intersectsBox(secondBB);
+      console.log(collision);
     }
 
     for (let i = 0;i < triangles.length;i ++) {
@@ -139,24 +147,26 @@
     }
     renderer.render(scene, camera);
 
-    const originPoint = player.mesh.position.clone();
-
-    for (let vertexIndex = 0;vertexIndex < player.mesh.children[0].geometry.vertices.length;vertexIndex ++) {
-      const localVertex = player.mesh.children[0].geometry.vertices[vertexIndex].clone();
-      const globalVertex = localVertex.applyMatrix4(player.mesh.matrix);
-      const directionVector = globalVertex.sub(player.mesh.position);
-
-      const ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
-      const collisionResultsEnemies = ray.intersectObjects(enemies);
-      const collisionResultsTriangles = ray.intersectObjects(triangles);
-      if (collisionResultsEnemies.length > 0 && collisionResultsEnemies[0].distance < directionVector.length())
-        console.log("hit");
-
-      if (collisionResultsTriangles.length > 0 && collisionResultsTriangles[0].distance < directionVector.length())
-        console.log("hit");
 
 
-    }
+    // const originPoint = player.mesh.position.clone();
+    //
+    // for (let vertexIndex = 0;vertexIndex < player.mesh.children[0].geometry.vertices.length;vertexIndex ++) {
+    //   const localVertex = player.mesh.children[0].geometry.vertices[vertexIndex].clone();
+    //   const globalVertex = localVertex.applyMatrix4(player.mesh.matrix);
+    //   const directionVector = globalVertex.sub(player.mesh.position);
+    //
+    //   const ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+    //   const collisionResultsEnemies = ray.intersectObjects(enemies);
+    //   const collisionResultsTriangles = ray.intersectObjects(triangles);
+    //   if (collisionResultsEnemies.length > 0 && collisionResultsEnemies[0].distance < directionVector.length())
+    //     console.log("hit");
+    //
+    //   if (collisionResultsTriangles.length > 0 && collisionResultsTriangles[0].distance < directionVector.length())
+    //     console.log("hit");
+    //
+    //
+    // }
   };
 
 
