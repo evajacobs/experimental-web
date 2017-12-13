@@ -11,6 +11,7 @@
     navigator.mediaDevices.getUserMedia({video: true})
     .then(stream => {
     videoEl.srcObject = stream;
+    videoHelmet.srcObject = stream;
     });
 
     createScene();
@@ -162,6 +163,7 @@
   // emotion ----
 
 const videoEl = document.getElementById(`video`);
+const videoHelmet = document.getElementById(`videoHelmet`);
 const playButton = document.getElementsByClassName(`play_button_svg`);
 const instructions = document.getElementsByClassName(`cameraControl`);
 const world = document.getElementsByClassName(`world`);
