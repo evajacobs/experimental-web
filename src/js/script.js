@@ -46,7 +46,7 @@ let currentEnemy,
   scoreElement;
 
 let score = 0;
-const lives = 3;
+let lives = 3;
 
 //variables emotions
 let timer = false;
@@ -226,13 +226,18 @@ const createLives = () => {
   livesElement.classList.add(`lives`);
   const parrent = document.getElementsByClassName(`world`)[0];
   parrent.appendChild(livesElement);
-  livesElement.innerHTML = ``;
+  drawLives();
+};
+
+const drawLives = () => {
+  const livesElement = document.getElementsByClassName(`lives`)[0];
+  livesElement.innerHTML = '';
   for (let i = 0;i < lives;i ++) {
     const oneLive = document.createElement(`img`);
     oneLive.setAttribute(`src`, `assets/liveFull.png`);
     livesElement.appendChild(oneLive);
   }
-};
+}
 
 const createScore = () => {
   scoreElement = document.createElement(`h1`);
@@ -259,8 +264,8 @@ const loopWorld = () => {
     if(collision) {
       //console.log(enemyObject);
       enemyObject.position.z -= 2000;
-      // lives --;
-      // createLives();
+      lives --;
+      drawLives();
     }
   }
 
