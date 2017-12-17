@@ -13,8 +13,8 @@ export default (THREE, enemies, scene) => {
     enemies.push(rock.mesh);
   }
 
-  return enemies
-}
+  return enemies;
+};
 
 class Enemy {
 
@@ -28,7 +28,7 @@ class Enemy {
 
   randomPosition() {
     this._mesh.position.x = Math.random() * 1000 - 500;
-    this._mesh.position.y = Math.random() * -1000 - 500;
+    this._mesh.position.y = Math.random() * - 1000 - 500;
   }
 }
 

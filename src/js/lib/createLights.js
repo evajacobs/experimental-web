@@ -1,7 +1,7 @@
 export default (THREE,  scene) => {
-  let hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9);
+  const hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9);
 
-  let shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+  const shadowLight = new THREE.DirectionalLight(0xffffff, .9);
 
   shadowLight.position.set(150, 350, 350);
   shadowLight.castShadow = true;
@@ -19,4 +19,4 @@ export default (THREE,  scene) => {
   scene.add(hemisphereLight);
   scene.add(shadowLight);
 
-}
+};

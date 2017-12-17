@@ -13,7 +13,7 @@ export default (THREE, triangles, scene) => {
     this.oneTriangle.receiveShadow = true;
 
     this.oneTriangle.position.x = Math.random() * 1000 - 500;
-    this.oneTriangle.position.y = Math.random() * -1000 - 500;
+    this.oneTriangle.position.y = Math.random() * - 1000 - 500;
     this.oneTriangle.position.z = i;
 
     scene.add(this.oneTriangle);
@@ -22,5 +22,5 @@ export default (THREE, triangles, scene) => {
 
   }
 
-  return triangles
-}
+  return triangles;
+};

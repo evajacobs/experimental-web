@@ -1,25 +1,19 @@
-export default (THREE, scene, player) => {
-  player = new Player(THREE);
-  scene.add(player.mesh);
+let player;
 
-  return player
-}
+export default (THREE, OBJLoader, scene) => {
 
-class Player {
-  constructor(THREE) {
-    this.mesh = new THREE.Object3D();
-    this.mesh.name = `pilot`;
+  if (!player) {
 
-    const geom = new THREE.BoxGeometry(100, 100, 100);
-    const mat = new THREE.MeshPhongMaterial({
-      color: 0xf1c40f,
-      transparent: true,
-      opacity: 1,
-      shininess: 10,
-      side: THREE.DoubleSide
+    const loader = new THREE.OBJLoader();
+    loader.load(`assets/astronaut.obj`, object => {
+      player = object;
+      player.position.set(1500, - 2200, 1100);
+      player.scale.set(0.1, 0.1, 0.1);
     });
-    const body = new THREE.Mesh(geom, mat);
-    body.position.set(0,-1200, 1400);
-    this.mesh.add(body);
+
+  } else {
+    scene.add(player);
+    return player;
+
   }
-}
+};
