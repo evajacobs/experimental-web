@@ -94,7 +94,6 @@ const startVideo = () => {
 };
 
 const drawLoop = () => {
-  requestAnimationFrame(drawLoop);
 
   trackFace();
 
@@ -104,13 +103,15 @@ const drawLoop = () => {
   }
 
   if (state === `world`) {
-    loopWorld();
-
-    if (!player && scene) {
-      player = createPlayer(THREE, OBJLoader, scene);
-      window.threePlayer = player;
+    if(scene) {
+      if (!player) {
+        player = createPlayer(THREE, OBJLoader, scene);
+      }else {
+        loopWorld();
+      }
     }
   }
+  requestAnimationFrame(drawLoop);
 };
 
 const trackFace = () => {
@@ -242,9 +243,25 @@ const createScore = () => {
 };
 
 const loopWorld = () => {
+  let playerObject = player;
+  const playerBox = new THREE.Box3().setFromObject(playerObject);
 
   for (let i = 0;i < enemies.length;i ++) {
     moveEnemy(i);
+    let enemyObject = enemies[i];
+
+
+    const enemyBox = new THREE.Box3().setFromObject(enemyObject);
+
+
+
+    let collision = playerBox.intersectsBox(enemyBox);
+    if(collision) {
+      //console.log(enemyObject);
+      enemyObject.position.z -= 2000;
+      // lives --;
+      // createLives();
+    }
   }
 
   for (let i = 0;i < triangles.length;i ++) {
@@ -285,7 +302,7 @@ const moveTriangle = i => {
 const startEmotions = () => {
   if (!timer) {
     timer = true;
-    setTimeout(() => showEmotions(), 5000);
+    setTimeout(() => showEmotions(), 15000);
   }
 };
 
