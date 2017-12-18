@@ -176,9 +176,19 @@ const clickHandlerPlayAgain = () => {
     iterations: 1
   });
   anim.finished.then(() => {
-    world[0].style.display = `inline`;
     state = `world`;
     endscreen[0].style.display = `none`;
+    lives = 3;
+    score = 0;
+    drawLives();
+    scoreElement.innerHTML = `score: ${  score}`;
+    for(let i = 0; i < enemies.length; i ++){
+      enemies[i].position.z -=2000;
+    }
+    for(let i = 0; i < triangles.length; i ++){
+      triangles[i].position.z -= 2000;
+    }
+    world[0].style.display = `inline`;
     anim = world[0].animate([
       {
         opacity: `0`,
