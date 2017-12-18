@@ -1,8 +1,9 @@
 export default (THREE, triangles, scene) => {
-  for (let i = - 1000;i < 1000;i += 20) {
+  let randomxPos = Math.random() * (200) - (100);
+  for (let i = - 200;i < 200;i += 100) {
     //this.mesh = new THREE.Object3D();
 
-    const geomTriangle = new THREE.TetrahedronGeometry(5, 0);
+    const geomTriangle = new THREE.TetrahedronGeometry(3, 0);
     const matTriangle = new THREE.MeshPhongMaterial({
       color: 0x009999,
       shininess: 0,
@@ -12,8 +13,9 @@ export default (THREE, triangles, scene) => {
     this.oneTriangle.castShadow = true;
     this.oneTriangle.receiveShadow = true;
 
-    this.oneTriangle.position.x = Math.random() * 1000 - 500;
-    this.oneTriangle.position.y = Math.random() * - 1000 - 500;
+
+    this.oneTriangle.position.x = randomxPos;
+    this.oneTriangle.position.y = -50;
     this.oneTriangle.position.z = i;
 
     scene.add(this.oneTriangle);

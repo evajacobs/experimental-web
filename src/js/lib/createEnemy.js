@@ -1,12 +1,12 @@
 export default (THREE, enemies, scene) => {
-  for (let i = - 1000;i < 1000;i += 150) {
+  for (let i = - 1000;i < 1000;i += 250) {
     const planet = new Planet(THREE);
     planet.mesh.position.z = i;
     scene.add(planet.mesh);
     enemies.push(planet.mesh);
   }
 
-  for (let i = - 1000;i < 1000;i += 150) {
+  for (let i = - 1000;i < 1000;i += 250) {
     const rock = new Rock(THREE);
     rock.mesh.position.z = i;
     scene.add(rock.mesh);
@@ -27,8 +27,8 @@ class Enemy {
   }
 
   randomPosition() {
-    this._mesh.position.x = Math.random() * 1000 - 500;
-    this._mesh.position.y = Math.random() * - 1000 - 500;
+    this._mesh.position.x = Math.random() * (window.innerWidth/2) - (window.innerWidth/4);
+    this._mesh.position.y = Math.random() * (window.innerHeight/2) - (window.innerHeight/4);
   }
 }
 
@@ -37,7 +37,7 @@ class Planet extends Enemy {
   constructor(THREE) {
     super();
     //create an enemy
-    const geomEnemy = new THREE.TetrahedronGeometry(30, 4);
+    const geomEnemy = new THREE.TetrahedronGeometry(25, 4);
 
     // create a material
     const loader = new THREE.TextureLoader();

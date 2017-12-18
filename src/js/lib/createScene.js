@@ -22,10 +22,10 @@ export const createScene = THREE => {
   aspectRatio = WIDTH / HEIGHT;
   fieldOfView = 60;
   nearPlane = 1;
-  farPlane = 4000;
+  farPlane = 8000;
   camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
 
-  camera.position.set(0, - 1000, 2000);
+  camera.position.set(0, 0, 2000);
 
   renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
 

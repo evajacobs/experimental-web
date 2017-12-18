@@ -7,8 +7,8 @@ export default (THREE, OBJLoader, scene) => {
     const loader = new THREE.OBJLoader();
     loader.load(`assets/astronaut.obj`, object => {
       player = object;
-      player.position.set(1500, - 2200, 1100);
-      player.scale.set(0.1, 0.1, 0.1);
+      player.position.set(800, -700, 1500);
+      player.scale.set(0.05, 0.05, 0.05);
     });
 
   } else {

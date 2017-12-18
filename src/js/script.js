@@ -2,6 +2,7 @@ import {createScene, scene, renderer, camera} from './lib/createScene';
 import createLights from './lib/createLights';
 import createPlayer from './lib/createPlayer';
 import createEnemy from './lib/createEnemy';
+import createMoon from './lib/createMoon';
 import createTriangle from './lib/createTriangle';
 
 const THREE = require(`three`);
@@ -47,6 +48,9 @@ let currentEnemy,
 
 let score = 0;
 let lives = 3;
+
+let moon;
+let emotionActif = false;
 
 //variables emotions
 let timer = false;
@@ -106,6 +110,7 @@ const drawLoop = () => {
     if(scene) {
       if (!player) {
         player = createPlayer(THREE, OBJLoader, scene);
+        window.threePlayer = player;
       }else {
         loopWorld();
       }
@@ -140,9 +145,9 @@ const trackFace = () => {
 
       if (player) {
 
-        if (Math.ceil(ctrack.getCurrentPosition()[41][0]) > 120 && player.position.x > 1200) {
+        if (Math.ceil(ctrack.getCurrentPosition()[41][0]) > 120 && player.position.x > 200) {
           player.position.x = mapRange(Math.ceil(ctrack.getCurrentPosition()[41][0]));
-        } else if (Math.ceil(ctrack.getCurrentPosition()[41][0]) < 110 && player.position.x < 2100) {
+        } else if (Math.ceil(ctrack.getCurrentPosition()[41][0]) < 110 && player.position.x < 1400) {
           player.position.x = mapRange(Math.ceil(ctrack.getCurrentPosition()[41][0]));
         }
       }
@@ -162,7 +167,7 @@ const trackFace = () => {
 };
 
 const mapRange = value => {
-  return 1200 + (2100 - 1200) * (value - 200) / (30 - 200);
+  return 200 + (1400 - 200) * (value - 200) / (30 - 200);
 };
 
 const updateFaceData = data => {
@@ -215,6 +220,7 @@ const renderWorld = () => {
 
   enemies = createEnemy(THREE, enemies, scene);
   triangles = createTriangle(THREE, triangles, scene);
+  moon = createMoon(THREE, moon, scene);
   createLives();
   createScore();
 
@@ -254,15 +260,9 @@ const loopWorld = () => {
   for (let i = 0;i < enemies.length;i ++) {
     moveEnemy(i);
     let enemyObject = enemies[i];
-
-
     const enemyBox = new THREE.Box3().setFromObject(enemyObject);
-
-
-
     let collision = playerBox.intersectsBox(enemyBox);
-    if(collision) {
-      //console.log(enemyObject);
+    if(collision && emotionActif === false) {
       enemyObject.position.z -= 2000;
       lives --;
       drawLives();
@@ -271,6 +271,14 @@ const loopWorld = () => {
 
   for (let i = 0;i < triangles.length;i ++) {
     moveTriangle(i);
+    let triangleObject = triangles[i];
+    const triangleBox = new THREE.Box3().setFromObject(triangleObject);
+    let collision = playerBox.intersectsBox(triangleBox);
+    if(collision && emotionActif === false) {
+      score += 1;
+      scoreElement.innerHTML = `score: ${  score}`;
+      triangleObject.position.z -= 2000;
+    }
   }
 
   renderer.render(scene, camera);
@@ -291,13 +299,15 @@ const moveEnemy = i => {
 };
 
 const moveTriangle = i => {
+  if (triangles) {
+    let currentTriangle = triangles[i];
+    currentTriangle.rotation.x += Math.random() * - 0.05;
+    currentTriangle.rotation.y += Math.random() *  - 0.05;
+    currentTriangle.position.z +=  10;
 
-  triangles[i].rotation.x += Math.random() * - 0.05;
-  triangles[i].rotation.y += Math.random() *  - 0.05;
-
-  triangle = triangles[i];
-
-  triangle.position.z +=  10;
+    // Reset z-position to reuse triangles
+    if (currentTriangle.position.z > 2000) currentTriangle.position.z -= 2000;
+  }
 
 };
 
@@ -307,12 +317,12 @@ const moveTriangle = i => {
 const startEmotions = () => {
   if (!timer) {
     timer = true;
-    setTimeout(() => showEmotions(), 15000);
+    setTimeout(() => showEmotions(), 10000);
   }
 };
 
 const showEmotions =  () => {
-
+  emotionActif = true;
   anim = canvas.animate([
     {
       opacity: `0`,
@@ -422,7 +432,7 @@ const checkEmotion = () => {
 };
 
 const removeEmotion = () => {
-
+  emotionActif = false;
   emotionContainer[0].innerHTML = `<p class="emotionText"></p>`;
 
   anim = canvas.animate([
