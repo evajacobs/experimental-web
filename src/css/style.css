@@ -193,3 +193,32 @@ span {
   z-index: 200;
   width: 14.2rem;
 }
+
+.endscreen {
+  height: 100vh;
+  width: 100vw;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.endscreen h1 {
+  font-size: 10rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.endscreenScore {
+  font-size: 5rem;
+  margin-top: 3rem;
+}
+
+.play_again_button_svg {
+  margin-top: 3.5rem;
+  width: 15%;
+}
+
+.play_again_button_svg:hover {
+  cursor: pointer;
+}

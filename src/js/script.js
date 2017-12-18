@@ -15,6 +15,7 @@ let firstRender = true;
 const playButton = document.getElementsByClassName(`play_button_svg`);
 const instructions = document.getElementsByClassName(`cameraControl`);
 const world = document.getElementsByClassName(`world`);
+const endscreen = document.getElementsByClassName(`endscreen`);
 
 //variables tracking face
 const videoEl = document.getElementById(`video`);
@@ -116,8 +117,84 @@ const drawLoop = () => {
       }
     }
   }
+
+  if(state === `endscreen`) {
+    state = ``;
+    animateEndscreen();
+  }
   requestAnimationFrame(drawLoop);
 };
+
+const animateEndscreen = () => {
+  anim = world[0].animate([
+    {
+      opacity: `1`,
+      easing: `ease-out`
+    },
+    {
+      opacity: `0`,
+    }
+  ], {
+    fill: `forwards`,
+    duration: 300,
+    iterations: 1
+  });
+  anim.finished.then(() => {
+    endscreen[0].style.display = `flex`;
+    world[0].style.display = `none`;
+    document.getElementsByClassName('endscreenScore')[0].innerHTML = `score: ${  score}`;
+    document.getElementsByClassName('play_again_button_svg')[0].addEventListener(`click`, clickHandlerPlayAgain);
+    anim = endscreen[0].animate([
+      {
+        opacity: `0`,
+        easing: `ease-out`
+      },
+      {
+        opacity: `1`,
+      }
+    ], {
+      fill: `forwards`,
+      duration: 400,
+      iterations: 1
+    });
+
+  });
+}
+
+const clickHandlerPlayAgain = () => {
+  anim = endscreen[0].animate([
+    {
+      opacity: `1`,
+      easing: `ease-out`
+    },
+    {
+      opacity: `0`,
+    }
+  ], {
+    fill: `forwards`,
+    duration: 300,
+    iterations: 1
+  });
+  anim.finished.then(() => {
+    world[0].style.display = `inline`;
+    state = `world`;
+    endscreen[0].style.display = `none`;
+    anim = world[0].animate([
+      {
+        opacity: `0`,
+        easing: `ease-out`
+      },
+      {
+        opacity: `1`,
+      }
+    ], {
+      fill: `forwards`,
+      duration: 400,
+      iterations: 1
+    });
+
+  });
+}
 
 const trackFace = () => {
 
@@ -226,7 +303,6 @@ const renderWorld = () => {
 
 };
 
-
 const createLives = () => {
   const livesElement = document.createElement(`div`);
   livesElement.classList.add(`lives`);
@@ -238,11 +314,16 @@ const createLives = () => {
 const drawLives = () => {
   const livesElement = document.getElementsByClassName(`lives`)[0];
   livesElement.innerHTML = '';
-  for (let i = 0;i < lives;i ++) {
-    const oneLive = document.createElement(`img`);
-    oneLive.setAttribute(`src`, `assets/liveFull.png`);
-    livesElement.appendChild(oneLive);
+  if(lives > 0) {
+    for (let i = 0;i < lives;i ++) {
+      const oneLive = document.createElement(`img`);
+      oneLive.setAttribute(`src`, `assets/liveFull.png`);
+      livesElement.appendChild(oneLive);
+    }
+  }else {
+    state = `endscreen`;
   }
+
 }
 
 const createScore = () => {
@@ -293,7 +374,10 @@ const moveEnemy = i => {
     currentEnemy.position.z +=  10;
 
       // Reset z-position to reuse enemies
-    if (currentEnemy.position.z > 2000) currentEnemy.position.z -= 2000;
+    if (currentEnemy.position.z > 2000) {
+      currentEnemy.position.z -= 2000;
+      currentEnemy.position.x = Math.random() * (window.innerWidth/2) - (window.innerWidth/4);
+    }
   }
 
 };
