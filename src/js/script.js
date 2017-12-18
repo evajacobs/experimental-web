@@ -221,11 +221,13 @@ const trackFace = () => {
       startEmotions();
 
       if (player) {
-
-        if (Math.ceil(ctrack.getCurrentPosition()[41][0]) > 120 && player.position.x > 200) {
-          player.position.x = mapRange(Math.ceil(ctrack.getCurrentPosition()[41][0]));
-        } else if (Math.ceil(ctrack.getCurrentPosition()[41][0]) < 110 && player.position.x < 1400) {
-          player.position.x = mapRange(Math.ceil(ctrack.getCurrentPosition()[41][0]));
+        let xHead =  Math.ceil(ctrack.getCurrentPosition()[41][0]);
+        if (xHead > 200) {
+          player.position.x = 200;
+        } else if (xHead < 40) {
+          player.position.x = 1400;
+        }else {
+          player.position.x = mapRange(xHead, 200, 40, 200, 1400);
         }
       }
 
@@ -243,8 +245,8 @@ const trackFace = () => {
 
 };
 
-const mapRange = value => {
-  return 200 + (1400 - 200) * (value - 200) / (30 - 200);
+const mapRange = (value, low1, high1, low2, high2) => {
+  return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 };
 
 const updateFaceData = data => {
@@ -296,7 +298,7 @@ const renderWorld = () => {
   createLights(THREE, scene);
 
   enemies = createEnemy(THREE, enemies, scene);
-  triangles = createTriangle(THREE, triangles, scene);
+  triangles = createTriangle(THREE, triangles, triangleXpos, scene);
   moon = createMoon(THREE, moon, scene);
   createLives();
   createScore();
@@ -359,6 +361,10 @@ const loopWorld = () => {
       score += 1;
       scoreElement.innerHTML = `score: ${  score}`;
       triangleObject.position.z -= 2000;
+      if(i === 0){
+        triangleXpos = calculateTriangleXpos();
+      }
+      triangleObject.position.x = triangleXpos;
     }
   }
 
@@ -390,10 +396,22 @@ const moveTriangle = i => {
     currentTriangle.position.z +=  10;
 
     // Reset z-position to reuse triangles
-    if (currentTriangle.position.z > 2000) currentTriangle.position.z -= 2000;
+    if (currentTriangle.position.z > 2000){
+      currentTriangle.position.z -= 2000;
+      if(i === 0){
+        triangleXpos = calculateTriangleXpos();
+      }
+      currentTriangle.position.x = triangleXpos;
+    }
   }
 
 };
+
+const calculateTriangleXpos = () => {
+  return Math.random() * (800) - (400);
+}
+
+let triangleXpos = calculateTriangleXpos();
 
 
 //EMOTIONS
@@ -401,7 +419,7 @@ const moveTriangle = i => {
 const startEmotions = () => {
   if (!timer) {
     timer = true;
-    setTimeout(() => showEmotions(), 10000);
+    setTimeout(() => showEmotions(), 100000);
   }
 };
 

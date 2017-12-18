@@ -1,12 +1,12 @@
 export default (THREE, enemies, scene) => {
-  for (let i = - 1000;i < 1000;i += 250) {
+  for (let i = - 1000;i < 1000;i += 300) {
     const planet = new Planet(THREE);
     planet.mesh.position.z = i;
     scene.add(planet.mesh);
     enemies.push(planet.mesh);
   }
 
-  for (let i = - 1000;i < 1000;i += 250) {
+  for (let i = - 1000;i < 1000;i += 300) {
     const rock = new Rock(THREE);
     rock.mesh.position.z = i;
     scene.add(rock.mesh);
