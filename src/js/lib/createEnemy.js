@@ -27,8 +27,8 @@ class Enemy {
   }
 
   randomPosition() {
-    this._mesh.position.x = Math.random() * (window.innerWidth/2) - (window.innerWidth/4);
-    this._mesh.position.y = Math.random() * (window.innerHeight/2) - (window.innerHeight/4);
+    this._mesh.position.x = Math.random() * (window.innerWidth / 2) - (window.innerWidth / 4);
+    this._mesh.position.y = Math.random() * (window.innerHeight / 2) - (window.innerHeight / 4);
   }
 }
 

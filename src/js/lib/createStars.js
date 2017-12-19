@@ -4,14 +4,14 @@ const stars = [];
 export default (three, scene) => {
   THREE = three;
 
-    for (let i = 0;i < 1500;i ++) {
-      const star = new Star();
-      star.mesh.position.z = i;
-      scene.add(star.mesh);
-      stars.push(star.mesh);
-    }
+  for (let i = 0;i < 1500;i ++) {
+    const star = new Star();
+    star.mesh.position.z = i;
+    scene.add(star.mesh);
+    stars.push(star.mesh);
+  }
 
-    return stars;
+  return stars;
 
 
 };
@@ -36,7 +36,7 @@ class Star {
     //
     //this.mesh.position.x = -600;
     this.mesh.position.y = 0;
-    this.mesh.position.z = 500
+    this.mesh.position.z = 500;
     console.log(window.innerHeight);
 
     //

@@ -7,11 +7,11 @@ export default (THREE, OBJLoader, scene) => {
     const loader = new THREE.OBJLoader();
     loader.load(`assets/astro2.obj`, object => {
       player = object;
-      player.position.set(800, -650, 1600);
+      player.position.set(800, - 650, 1600);
       player.scale.set(0.05, 0.05, 0.05);
       // player.position.set(800, -650, 1600);
       // player.scale.set(0.1, 0.1, 0.1);
-      player.rotation.x = -.3;
+      player.rotation.x = - .3;
     });
 
   } else {

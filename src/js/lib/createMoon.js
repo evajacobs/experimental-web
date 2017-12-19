@@ -13,8 +13,8 @@ export default (THREE, moon, scene) => {
 
   this.moon.position.x = 0;
   this.moon.position.y = 0;
-  this.moon.position.z = -1800;
+  this.moon.position.z = - 1800;
   moon = this.moon;
   scene.add(this.moon);
-  return(moon);
-}
+  return (moon);
+};

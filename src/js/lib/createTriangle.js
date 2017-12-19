@@ -1,6 +1,6 @@
 export default (THREE, triangles, triangleXpos, scene) => {
 
-  for (let i = 200;i > -200;i -= 100) {
+  for (let i = 200;i > - 200;i -= 100) {
     //this.mesh = new THREE.Object3D();
 
     const geomTriangle = new THREE.TetrahedronGeometry(20, 0);
@@ -15,7 +15,7 @@ export default (THREE, triangles, triangleXpos, scene) => {
 
 
     this.oneTriangle.position.x = triangleXpos;
-    this.oneTriangle.position.y = -95;
+    this.oneTriangle.position.y = - 95;
     this.oneTriangle.position.z = i;
 
     scene.add(this.oneTriangle);
