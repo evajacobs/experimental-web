@@ -181,12 +181,16 @@ const animateScreen = (currentState, nextState, func) => {
 }
 
 const animateEndscreen = () => {
+  for( let i = scene.children.length - 1; i >= 0; i--) {
+    let obj = scene.children[i];
+    scene.remove(obj);
+  }
   endscreen.style.display = `flex`;
   world.style.display = `none`;
-
   const endscreenText = document.getElementsByClassName(`endscreenText`)[0];
   if(won === true) {
     endscreenText.innerHTML = `You made it to the moon!`;
+    won = false;
   }else {
     endscreenText.innerHTML = `GAME OVER`;
   }
@@ -353,9 +357,13 @@ const loopWorld = () => {
   }
 
   distancePlayer = Math.floor(moon.position.z + player.position.z);
-  if (distancePlayer > - 2100) {
+  console.log(distancePlayer);
+  if (distancePlayer <  2100) {
     document.getElementsByClassName(`st2`)[0].setAttribute(`y1`, mapRange(- distancePlayer, 200, - 2100, 173.6, 50));
     document.getElementsByClassName(`st2`)[0].setAttribute(`y2`, mapRange(- distancePlayer, 200, - 2100, 173.6, 50));
+  }else if(distancePlayer >= 2100) {
+    won = true;
+    animateScreen(world, endscreen, animateEndscreen);
   }
 
   renderer.render(scene, camera);
@@ -549,8 +557,6 @@ const clickHandlerPlayAgain = () => {
   speedEnemey = 10;
   speedMoon = 1.5;
   speedstars = 2;
-
-
   anim = endscreen.animate([
     {
       opacity: `1`,
@@ -569,14 +575,15 @@ const clickHandlerPlayAgain = () => {
     endscreen.style.display = `none`;
     lives = 3;
     score = 0;
+    streamVideo(videoHelmet);
+    createLights(THREE, scene);
+    player = createPlayer(THREE, OBJLoader, scene);
+    stars = createStars(THREE, scene);
+    enemies = createEnemy(THREE, enemies, scene);
+    triangles = createTriangle(THREE, triangles, triangleXpos, scene);
+    moon = createMoon(THREE, moon, scene);
     drawLives();
     scoreElement.innerHTML = `<h1 class="scoreTitle" >score</h1> <p class="scoreText"> ${score}</p>`;
-    for (let i = 0;i < enemies.length;i ++) {
-      enemies[i].position.z -= 2000;
-    }
-    for (let i = 0;i < triangles.length;i ++) {
-      triangles[i].position.z -= 2000;
-    }
     world.style.display = `inline`;
     anim = world.animate([
       {
