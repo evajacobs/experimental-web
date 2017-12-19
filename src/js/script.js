@@ -81,7 +81,7 @@ let loopWorldBoolean = true;
 
 let emotioncorrect = false;
 let speedEnemey = 10;
-let speedMoon = 0.3;
+let speedMoon = 1.5;
 let speedstars = 2;
 
 let distancePlayer = 0
@@ -182,7 +182,7 @@ const clickHandlerPlayAgain = () => {
   boosterOverlay.classList.add(`hidden`);
   renderer.domElement.classList.remove(`blur`)
   speedEnemey = 10;
-  speedMoon = 0.3;
+  speedMoon = 1.5;
   speedstars = 2;
 
 
@@ -422,9 +422,11 @@ const loopWorld = () => {
     }
   }
 
-  distancePlayer = Math.floor(moon.position.z - player.position.z);
-  // console.log(-distancePlayer);
-  // distance[0].innerHTML = -distancePlayer
+  distancePlayer = Math.floor(moon.position.z + player.position.z);
+    if(distancePlayer < 200 && distancePlayer > -2100) {
+      document.getElementsByClassName("st2")[0].setAttribute("y1", mapRange(-distancePlayer, 200, -2100, 173.6, 50));
+      document.getElementsByClassName("st2")[0].setAttribute("y2", mapRange(-distancePlayer, 200, -2100, 173.6, 50));
+    }
 
   renderer.render(scene, camera);
 
@@ -657,12 +659,12 @@ const removeEmotion = () => {
   }else{
     boosterOverlay.classList.remove(`hidden`);
     speedEnemey = 100;
-    speedMoon = 0.7;
+    speedMoon = 2;
     speedstars = 5;
     setTimeout(() => {
       boosterOverlay.classList.add(`hidden`);
       speedEnemey = 10;
-      speedMoon = 0.3;
+      speedMoon = 1.5;
       speedstars = 2;
       emotioncorrect = false;
     }, 4000);
