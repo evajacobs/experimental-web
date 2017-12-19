@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 213 176" style="enable-background:new 0 0 213 176;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:url(#cameraButtonLine_1_);stroke-width:2;stroke-miterlimit:10;}
+</style>
+<title>box</title>
+<linearGradient id="cameraButtonLine_1_" gradientUnits="userSpaceOnUse" x1="1107.8268" y1="712.1733" x2="1107.8268" y2="497.4932" gradientTransform="matrix(0.75 0 0 0.75 -724.38 -372.38)">
+	<stop  offset="0" style="stop-color:#00FF75"/>
+	<stop  offset="1" style="stop-color:#00FFFF;stop-opacity:0.8"/>
+</linearGradient>
+<path id="cameraButtonLine" class="st0" d="M211.5,157.5c0,1.9-1.6,3.4-3.7,3.5c0,0-0.1,0-0.1,0H5.2c-2.1,0-3.7-1.5-3.8-3.4
+	c0,0,0,0,0-0.1V5c0-1.9,1.6-3.5,3.7-3.5c0,0,0,0,0.1,0h202.5c2.1,0,3.7,1.5,3.7,3.4c0,0,0,0,0,0.1V157.5z"/>
+</svg>

@@ -4,6 +4,9 @@ import createPlayer from './lib/createPlayer';
 import createEnemy from './lib/createEnemy';
 import createMoon from './lib/createMoon';
 import createTriangle from './lib/createTriangle';
+import webAudio from './lib/webAudio';
+import createStars from './lib/createStars';
+import createExplosion from './lib/createExplosion';
 
 const THREE = require(`three`);
 const OBJLoader = require(`three-obj-loader`);
@@ -40,7 +43,7 @@ ec.init(emotionModel);
 //variables webanimations
 let anim;
 
-let enemies = [], triangles = [];
+let enemies = [], triangles = [], stars = [];
 
 let currentEnemy,
   triangle,
@@ -62,6 +65,9 @@ const canvas = document.getElementById(`canvas`);
 const ctx = canvas.getContext(`2d`);
 const emotionText = document.getElementsByClassName(`emotionText`);
 const emotionContainer = document.getElementsByClassName(`emotionContainer`);
+const emotionOverlay = document.getElementsByClassName(`emotionOverlay`)[0];
+const boosterOverlay = document.getElementsByClassName(`boosterOverlay`)[0];
+const distance = document.getElementsByClassName(`distance`)[0];
 
 let ang = 0;
 let currentSec = 0;
@@ -69,6 +75,15 @@ let emotion;
 
 const emotions = [`angry`, `sad`, `surprised`, `happy`];
 let startDrawingTimer;
+let collisionBoolean = false;
+let loopWorldBoolean = true;
+
+let emotioncorrect = false;
+let speedEnemey = 10;
+let speedMoon = 0.3;
+let speedstars = 2;
+
+let distancePlayer = 0
 
 
 const init = () => {
@@ -112,7 +127,7 @@ const drawLoop = () => {
       if (!player) {
         player = createPlayer(THREE, OBJLoader, scene);
         window.threePlayer = player;
-      }else {
+      }else if(loopWorldBoolean){
         loopWorld();
       }
     }
@@ -162,6 +177,14 @@ const animateEndscreen = () => {
 }
 
 const clickHandlerPlayAgain = () => {
+  timer = false;
+  boosterOverlay.classList.add(`hidden`);
+  renderer.domElement.classList.remove(`blur`)
+  speedEnemey = 10;
+  speedMoon = 0.3;
+  speedstars = 2;
+
+
   anim = endscreen[0].animate([
     {
       opacity: `1`,
@@ -181,7 +204,7 @@ const clickHandlerPlayAgain = () => {
     lives = 3;
     score = 0;
     drawLives();
-    scoreElement.innerHTML = `score: ${  score}`;
+    scoreElement.innerHTML = `<h1 class="scoreTitle" >score</h1> <p class="scoreText"> ${score}</p>`;
     for(let i = 0; i < enemies.length; i ++){
       enemies[i].position.z -=2000;
     }
@@ -266,6 +289,7 @@ const updateFaceData = data => {
 };
 
 const clickHandlerStart = () => {
+  webAudio(collisionBoolean);
   anim = instructions[0].animate([
     {
       opacity: `1`,
@@ -306,6 +330,7 @@ const renderWorld = () => {
   streamVideo(videoHelmet);
   createScene(THREE);
   createLights(THREE, scene);
+  stars = createStars(THREE, scene);
 
   enemies = createEnemy(THREE, enemies, scene);
   triangles = createTriangle(THREE, triangles, triangleXpos, scene);
@@ -333,15 +358,17 @@ const drawLives = () => {
       livesElement.appendChild(oneLive);
     }
   }else {
-    state = `endscreen`;
+    setTimeout(() => {
+      state = `endscreen`;
+    }, 1500);
   }
 
 }
 
 const createScore = () => {
-  scoreElement = document.createElement(`h1`);
+  scoreElement = document.createElement(`div`);
   scoreElement.classList.add(`score`);
-  scoreElement.innerHTML = `score: ${  score}`;
+  scoreElement.innerHTML = `<h1 class="scoreTitle" >score</h1> <p class="scoreText"> ${score}</p>`;
   const parrent = document.getElementsByClassName(`world`)[0];
   parrent.appendChild(scoreElement);
 };
@@ -350,15 +377,23 @@ const loopWorld = () => {
   let playerObject = player;
   const playerBox = new THREE.Box3().setFromObject(playerObject);
 
+  moveMoon();
+
   for (let i = 0;i < enemies.length;i ++) {
     moveEnemy(i);
     let enemyObject = enemies[i];
     const enemyBox = new THREE.Box3().setFromObject(enemyObject);
     let collision = playerBox.intersectsBox(enemyBox);
-    if(collision && emotionActif === false) {
+    if(collision && emotionActif === false && emotioncorrect === false) {
+      createExplosion(THREE, scene, enemyObject.position.x,enemyObject.position.y, enemyObject.position.z)
+      console.log(enemyObject.position.x,enemyObject.position.y, enemyObject.position.z );
       enemyObject.position.z -= 2000;
       lives --;
       drawLives();
+      collisionBoolean = true;
+      webAudio(collisionBoolean);
+    }else {
+      collisionBoolean = false;
     }
   }
 
@@ -369,14 +404,22 @@ const loopWorld = () => {
     let collision = playerBox.intersectsBox(triangleBox);
     if(collision && emotionActif === false) {
       score += 1;
-      scoreElement.innerHTML = `score: ${  score}`;
+      scoreElement.innerHTML = `<h1 class="scoreTitle" >score</h1> <p class="scoreText"> ${score}</p>`;
       triangleObject.position.z -= 2000;
       if(i === 0){
         triangleXpos = calculateTriangleXpos();
       }
       triangleObject.position.x = triangleXpos;
     }
+
+    for(let i = 0; i < stars.length; i++){
+      moveStars(i);
+    }
   }
+
+  distancePlayer = Math.floor(moon.position.z - player.position.z);
+  console.log(-distancePlayer);
+  // distance[0].innerHTML = -distancePlayer
 
   renderer.render(scene, camera);
 
@@ -387,7 +430,7 @@ const moveEnemy = i => {
     currentEnemy = enemies[i];
     currentEnemy.rotation.x += Math.random() * - 0.05;
     currentEnemy.rotation.y += Math.random() *  - 0.05;
-    currentEnemy.position.z +=  10;
+    currentEnemy.position.z +=  speedEnemey;
 
       // Reset z-position to reuse enemies
     if (currentEnemy.position.z > 2000) {
@@ -403,7 +446,7 @@ const moveTriangle = i => {
     let currentTriangle = triangles[i];
     currentTriangle.rotation.x += Math.random() * - 0.05;
     currentTriangle.rotation.y += Math.random() *  - 0.05;
-    currentTriangle.position.z +=  10;
+    currentTriangle.position.z +=  speedEnemey;
 
     // Reset z-position to reuse triangles
     if (currentTriangle.position.z > 2000){
@@ -417,6 +460,23 @@ const moveTriangle = i => {
 
 };
 
+const moveStars = i => {
+  if (stars) {
+    let currentStar = stars[i];
+    currentStar.position.z +=  speedstars;
+
+    if (currentStar.position.z > 2000){
+      currentStar.position.z -= 2000;
+    }
+  }
+
+};
+
+const moveMoon = () => {
+  moon.rotation.y += 0.005;
+  moon.position.z += speedMoon;
+}
+
 const calculateTriangleXpos = () => {
   return Math.random() * (800) - (400);
 }
@@ -429,11 +489,17 @@ let triangleXpos = calculateTriangleXpos();
 const startEmotions = () => {
   if (!timer) {
     timer = true;
-    setTimeout(() => showEmotions(), 100000);
+    // setTimeout(() => showEmotions(), 5000);
+    setTimeout(() => {
+      showEmotions()
+      emotionOverlay.classList.remove(`hidden`);
+    }, 10000);
+
   }
 };
 
 const showEmotions =  () => {
+  loopWorldBoolean = false;
   emotionActif = true;
   anim = canvas.animate([
     {
@@ -495,13 +561,13 @@ const  updateTime = () => {
 const drawSeconds = () => {
   ang = 0.007 * ((currentSec * 1000));
   const grd = ctx.createLinearGradient(0, 170, 360, 0);
-  grd.addColorStop(0, `#0071bc`);
+  grd.addColorStop(0, `#00ff75`);
   grd.addColorStop(1, `#00ffff`);
   ctx.fillStyle = grd;
   ctx.beginPath();
-  ctx.moveTo(300, 300);
-  ctx.lineTo(300, 100);
-  ctx.arc(300, 300, 250, calcDeg(0), calcDeg(ang), false);
+  ctx.moveTo(300, 350);
+  ctx.lineTo(300, 150);
+  ctx.arc(300, 350, 250, calcDeg(0), calcDeg(ang), false);
   ctx.lineTo(300, 300);
   ctx.fill();
 };
@@ -510,7 +576,7 @@ const drawCircle = () => {
   ctx.globalCompositeOperation = `destination-over`;
   ctx.fillStyle = `white`;
   ctx.beginPath();
-  ctx.arc(300, 300, 230, calcDeg(0), calcDeg(360), false);
+  ctx.arc(300, 350, 230, calcDeg(0), calcDeg(360), false);
   ctx.closePath();
   ctx.save();
   ctx.globalCompositeOperation = `source-over`;
@@ -531,21 +597,26 @@ const checkEmotion = () => {
   if (lastItem[emotions.indexOf(emotion)].value > 0.2) {
     emotionContainer[0].innerHTML = `<div> <img class="emotionResultImg" src="assets/svg/correct.svg" alt=""/> <p class="emotionResultText"> ${emotion} face check<p/> </div>`;
     score += 100;
-    scoreElement.innerHTML = `score: ${  score}`;
+    scoreElement.innerHTML = `<h1 class="scoreTitle" >score</h1> <p class="scoreText"> ${score}</p>`;
+    emotioncorrect = true;
   } else {
     emotionContainer[0].innerHTML = `<div> <img class="emotionResultImg" src="assets/svg/cancel.svg" alt="" /> <p class="emotionResultText" >Not ${emotion} enough<p/> <div/>`;
+    emotioncorrect = false;
   }
   emotionsTracked = [];
 
   setTimeout(() => {
     removeEmotion();
+    emotionOverlay.classList.add(`hidden`);
   }, 2000);
 
 };
 
 const removeEmotion = () => {
+  loopWorldBoolean = true;
   emotionActif = false;
   emotionContainer[0].innerHTML = `<p class="emotionText"></p>`;
+
 
   anim = canvas.animate([
     {
@@ -561,13 +632,37 @@ const removeEmotion = () => {
     iterations: 1
   });
 
-  setTimeout(() => {
-    showEmotions();
-  }, 5000);
+  if(timer){
+    setTimeout(() => {
+      showEmotions();
+      emotionOverlay.classList.remove(`hidden`);
+    },  Math.floor((Math.random() * 25000) + 15000));
+  }
+
 
   setTimeout(() => {
     ctx.clearRect(0, 0, 600, 600);
   }, 100);
+
+  if(!emotioncorrect){
+    renderer.domElement.classList.add(`blur`)
+    setTimeout(() => {
+      renderer.domElement.classList.remove(`blur`)
+    }, 6000);
+  }else{
+    boosterOverlay.classList.remove(`hidden`);
+    speedEnemey = 100;
+    speedMoon = 0.7;
+    speedstars = 5;
+    setTimeout(() => {
+      boosterOverlay.classList.add(`hidden`);
+      speedEnemey = 10;
+      speedMoon = 0.3;
+      speedstars = 2;
+      emotioncorrect = false;
+    }, 4000);
+  }
+
 };
 
 
