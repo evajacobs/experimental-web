@@ -7,6 +7,8 @@ import createTriangle from './lib/createTriangle';
 import webAudio from './lib/webAudio';
 import createStars from './lib/createStars';
 import createExplosion from './lib/createExplosion';
+import drawCircle from './lib/drawCircle';
+import drawSeconds from './lib/drawSeconds';
 
 const THREE = require(`three`);
 const OBJLoader = require(`three-obj-loader`);
@@ -55,7 +57,6 @@ const emotionContainer = document.getElementsByClassName(`emotionContainer`);
 const emotionOverlay = document.getElementsByClassName(`emotionOverlay`)[0];
 const boosterOverlay = document.getElementsByClassName(`boosterOverlay`)[0];
 
-let ang = 0;
 let currentSec = 0;
 let emotion;
 
@@ -444,8 +445,8 @@ const showEmotions =  () => {
   loopWorldBoolean = false;
   animateEmotions(canvas, 200, `0`, `1`, `ease-in`);
   countdownEmotion();
-  startDrawingTimer = setInterval(updateTime, 50);
-  drawCircle();
+  startDrawingTimer = setInterval(updateTimeEmotion, 50);
+  drawCircle(ctx);
 };
 
 const countdownEmotion = () => {
@@ -455,52 +456,19 @@ const countdownEmotion = () => {
   animateEmotions(emotionContainer[0], 200, `0`, `1`, `ease-in`);
 };
 
-const  updateTime = () => {
+const  updateTimeEmotion = () => {
   if (currentSec === 51) {
     checkEmotions = false;
     currentSec = 0;
     clearInterval(startDrawingTimer);
     ctx.clearRect(0, 0, 600, 600);
-    drawCircle();
+    drawCircle(ctx);
     checkEmotion();
   } else {
     checkEmotions = true;
     currentSec ++;
-    drawSeconds();
+    drawSeconds(ctx, currentSec);
   }
-};
-
-
-const drawSeconds = () => {
-  ang = 0.007 * ((currentSec * 1000));
-  const grd = ctx.createLinearGradient(0, 170, 360, 0);
-  grd.addColorStop(0, `#00ff75`);
-  grd.addColorStop(1, `#00ffff`);
-  ctx.fillStyle = grd;
-  ctx.beginPath();
-  ctx.moveTo(300, 350);
-  ctx.lineTo(300, 150);
-  ctx.arc(300, 350, 250, calcDeg(0), calcDeg(ang), false);
-  ctx.lineTo(300, 300);
-  ctx.fill();
-};
-
-const drawCircle = () => {
-  ctx.globalCompositeOperation = `destination-over`;
-  ctx.fillStyle = `white`;
-  ctx.beginPath();
-  ctx.arc(300, 350, 230, calcDeg(0), calcDeg(360), false);
-  ctx.closePath();
-  ctx.save();
-  ctx.globalCompositeOperation = `source-over`;
-  ctx.shadowBlur = 20;
-  ctx.shadowColor = `black`;
-  ctx.fill();
-  ctx.restore();
-};
-
-const calcDeg = deg => {
-  return (Math.PI / 180) * (deg - 90);
 };
 
 const checkEmotion = () => {
