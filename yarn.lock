@@ -278,6 +278,10 @@ async-each@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/async-each/-/async-each-1.0.1.tgz#19d386a1d9edc6e7c1c85d388aedbcc56d33602d"
 
+async@0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/async/-/async-0.9.0.tgz#ac3613b1da9bed1b47510bb4651b8931e47146c7"
+
 async@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
@@ -7280,6 +7284,12 @@ wbuf@^1.1.0, wbuf@^1.7.2:
   resolved "https://registry.yarnpkg.com/wbuf/-/wbuf-1.7.2.tgz#d697b99f1f59512df2751be42769c1580b5801fe"
   dependencies:
     minimalistic-assert "^1.0.0"
+
+webaudio-buffer-loader@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/webaudio-buffer-loader/-/webaudio-buffer-loader-1.0.1.tgz#1a3ed90fc7b34d18569fab82ae04bb382863a439"
+  dependencies:
+    async "0.9.0"
 
 webpack-combine-loaders@2.0.0:
   version "2.0.0"

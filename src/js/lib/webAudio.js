@@ -1,90 +1,84 @@
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // Our audio context
-let request;
-let source;
+const loader = require('webaudio-buffer-loader');
+let  bufferLoader;
 let playing = true;
+let sourceMainAudio;
+let sourceCollision;
 let gainNode = null;
-let mainBuffer;
-let collisionBoolean;
+let collision = false;
+let collect = false;
+let loadBuffers;
+
+const buffers = ['./assets/sounds/backgroundSound.mp3', './assets/sounds/flashbang.mp3', './assets/sounds/collect.wav' ];
 
 
 const button = document.getElementsByClassName('soundImage');
 const audioRange = document.getElementsByClassName('audioRange');
 
-export default (collision) => {
-  collisionBoolean = collision;
+export default (collisionBoolean, collectBoolean) => {
 
-  if(collisionBoolean){
-    loadSound(`flashbang.mp3`);
+  collision = collisionBoolean;
+  collect = collectBoolean;
+
+  if(!loadBuffers){
+    loader(buffers, audioCtx, function(err, loadedBuffers) {
+      loadBuffers = loadedBuffers;
+      finishedLoading(loadedBuffers)
+    });
   }else {
-    loadSound(`test.mp3`);
+    playCollisionOrCollect();
   }
+
+
   button[0].addEventListener(`click`, toggle);
   audioRange[0].addEventListener(`change`, changeVolume);
-
 }
 
-const loadSound = (file) => {
+function finishedLoading(loadedBuffers) {
+  gainNode = audioCtx.createGain();
+  sourceMainAudio  = audioCtx.createBufferSource();
+  sourceMainAudio.buffer = loadedBuffers[0];
 
-    const request = new XMLHttpRequest();
-    request.open("GET", `./assets/sounds/${file}`, true);
-    request.responseType = "arraybuffer";
-    request.addEventListener(`load`, () => {
-        audioCtx.decodeAudioData(request.response, (buffer) => {
-             mainBuffer = buffer;
-            playSound();  // don't start processing it before the response is there!
-        }, (error) => {
-            console.error("decodeAudioData error", error);
-        });
-    });
-    request.send();
+  sourceMainAudio.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
 
+  sourceMainAudio.start(0);
 }
 
-const playSound = () => {
-  if(collisionBoolean){
-    console.log('test');
-    source = audioCtx.createBufferSource();
-    source.buffer = mainBuffer;
-    source.connect(audioCtx.destination);
-    source.loop = false;
-    source.start(0);
-    collisionBoolean =  false;
-  }else {
-    if (!audioCtx.createGain)
-      audioCtx.createGain = audioCtx.createGainNode;
-      gainNode = audioCtx.createGain();
-      source = audioCtx.createBufferSource();
-      source.buffer = mainBuffer;
-
-    // Connect source to a gain node
-    source.connect(gainNode);
-    // Connect gain node to destination
-    gainNode.connect(audioCtx.destination);
-    // Start playback in a loop
-    source.loop = true;
-    if (!source.start)
-      source.start = source.noteOn;
-      source.start(0);
-  }
+const playSoundMain = () => {
+  gainNode.gain.value = 1;
 }
-
-
 
 const changeVolume = (event) => {
   var volume = event.currentTarget.value;
   var fraction = parseInt(volume) / parseInt(100);
+  console.log(fraction * fraction);
   gainNode.gain.value = fraction * fraction;
 };
 
 const stop = () => {
-  if (!source.stop){
-    source.stop = source.noteOff;
-    source.stop(0);
-  }
-};
+  gainNode.gain.value = 0;
+}
 
 const  toggle = ()  => {
-  collisionBoolean = false;
-  playing ? stop() : playSound();
+  playing ? stop() : playSoundMain();
   playing = !playing;
 };
+
+const playCollisionOrCollect = () => {
+  if(collision){
+    playsound(1)
+    collision = false
+  } else if (collect) {
+    playsound(2)
+    collect = false
+  }
+}
+
+const playsound = (index) => {
+  sourceCollision = audioCtx.createBufferSource();
+  sourceCollision.buffer = loadBuffers[index];
+  sourceCollision.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  sourceCollision.start(0);
+}

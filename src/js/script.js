@@ -76,6 +76,7 @@ let emotion;
 const emotions = [`angry`, `sad`, `surprised`, `happy`];
 let startDrawingTimer;
 let collisionBoolean = false;
+let collectBoolean = false;
 let loopWorldBoolean = true;
 
 let emotioncorrect = false;
@@ -289,7 +290,7 @@ const updateFaceData = data => {
 };
 
 const clickHandlerStart = () => {
-  webAudio(collisionBoolean);
+  webAudio(collisionBoolean, collectBoolean);
   anim = instructions[0].animate([
     {
       opacity: `1`,
@@ -391,7 +392,7 @@ const loopWorld = () => {
       lives --;
       drawLives();
       collisionBoolean = true;
-      webAudio(collisionBoolean);
+      webAudio(collisionBoolean , collectBoolean );
     }else {
       collisionBoolean = false;
     }
@@ -410,6 +411,10 @@ const loopWorld = () => {
         triangleXpos = calculateTriangleXpos();
       }
       triangleObject.position.x = triangleXpos;
+      collectBoolean = true;
+      webAudio(collisionBoolean, collectBoolean);
+    }else {
+      collectBoolean = false;
     }
 
     for(let i = 0; i < stars.length; i++){
@@ -418,7 +423,7 @@ const loopWorld = () => {
   }
 
   distancePlayer = Math.floor(moon.position.z - player.position.z);
-  console.log(-distancePlayer);
+  // console.log(-distancePlayer);
   // distance[0].innerHTML = -distancePlayer
 
   renderer.render(scene, camera);
