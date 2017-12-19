@@ -2,9 +2,7 @@
 @import 'vars';
 
 html {
-  /* background-color: var(--bg-color); */
   background: url(../assets/svg/test.png);
-
 }
 
 body {
@@ -21,7 +19,7 @@ h1 {
 
 .blur {
   transition: all .1s;
-  filter: blur(2px);
+  filter: blur(.2rem);
 }
 
 .world {
@@ -38,8 +36,10 @@ h1 {
 
 .score {
   position: absolute;
-  right: 70rem;
+  right: 35%;
   top: 3rem;
+  text-align: center;
+  width: 40rem;
 }
 
 .scoreTitle {
@@ -116,23 +116,9 @@ h1 {
 
 .cameraWebamBox {
   position: absolute;
-  left: -17px;
-  width: 263px;
+  left: -1.7rem;
+  width: 26.3rem;
 }
-
-/*.play-button-active {
-  animation-name: size;
-  animation-duration: 4s;
-  animation-iteration-count: infinite;
-}
-
-@keyframes size {
-
-  0% { width: 60%; }
-
-  100% { width: 65%; }
-
-}*/
 
 .camera_icon_svg {
   margin-top: 1.8rem;
@@ -146,7 +132,7 @@ h1 {
 
 .cameraWebcamVideo {
   position: relative;
-  margin-top: 23px;
+  margin-top: 2.3rem;
 }
 
 .overlayWebcam {
@@ -187,7 +173,7 @@ h1 {
 }
 
 .emotionResultImg {
-  width: 70%;
+  width: 15rem;
 }
 
 .EmotionToMake {
@@ -255,35 +241,35 @@ span {
 
 .soundImage {
   position: absolute;
-  left: 30px;
-  top: 40px;
+  left: 3rem;
+  top: 4rem;
   cursor: pointer;
   z-index: 20000;
 }
 
 .audioRange {
   position: absolute;
-  left: 125px;
-  top: 80px;
+  left: 12.5rem;
+  top: 8rem;
   z-index: 2000;
-  width: 100px;
+  width: 10rem;
   appearance: none;
 }
 
 input[type=range]::-webkit-slider-runnable-track {
-  height: 5px;
+  height: .5rem;
   background: linear-gradient(#00ff75, aqua);
   border: none;
 }
 
 input[type=range]::-webkit-slider-thumb {
   appearance: none;
-  height: 16px;
-  width: 16px;
+  height: 1.6rem;
+  width: 1.6rem;
   border-radius: 50%;
   background: #1f1029;
-  border: 3px solid #00ff75;
-  margin-top: -4px;
+  border: .3rem solid #00ff75;
+  margin-top: -.4rem;
 }
 
 input[type=range]:focus {
@@ -296,8 +282,8 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 
 .audioRangetext {
   position: absolute;
-  left: 127px;
-  top: 55px;
+  left: 12.7rem;
+  top: 5.5rem;
 }
 
 .emotionOverlay {

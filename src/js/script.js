@@ -89,6 +89,9 @@ let score = 0;
 // World - lives
 let lives = 3;
 
+// World - won
+let won = false;;
+
 //ENDSCREEN
 const endscreen = document.getElementsByClassName(`endscreen`)[0];
 
@@ -138,7 +141,7 @@ const drawLoop = () => {
 
   if (state === `endscreen` && firstRenderEndscreen === true) {
     firstRenderEndscreen = false;
-    animateScreen(world, 300, endscreen, 400, animateEndscreen);
+    animateScreen(world, endscreen, animateEndscreen);
   }
   requestAnimationFrame(drawLoop);
 };
@@ -180,6 +183,13 @@ const animateScreen = (currentState, nextState, func) => {
 const animateEndscreen = () => {
   endscreen.style.display = `flex`;
   world.style.display = `none`;
+
+  const endscreenText = document.getElementsByClassName(`endscreenText`)[0];
+  if(won === true) {
+    endscreenText.innerHTML = `You made it to the moon!`;
+  }else {
+    endscreenText.innerHTML = `GAME OVER`;
+  }
   document.getElementsByClassName(`endscreenScore`)[0].innerHTML = `score: ${  score}`;
   document.getElementsByClassName(`play_again_button_svg`)[0].addEventListener(`click`, clickHandlerPlayAgain);
 };
@@ -541,7 +551,7 @@ const clickHandlerPlayAgain = () => {
   speedstars = 2;
 
 
-  anim = endscreen[0].animate([
+  anim = endscreen.animate([
     {
       opacity: `1`,
       easing: `ease-out`
@@ -556,7 +566,7 @@ const clickHandlerPlayAgain = () => {
   });
   anim.finished.then(() => {
     state = `world`;
-    endscreen[0].style.display = `none`;
+    endscreen.style.display = `none`;
     lives = 3;
     score = 0;
     drawLives();
@@ -567,8 +577,8 @@ const clickHandlerPlayAgain = () => {
     for (let i = 0;i < triangles.length;i ++) {
       triangles[i].position.z -= 2000;
     }
-    world[0].style.display = `inline`;
-    anim = world[0].animate([
+    world.style.display = `inline`;
+    anim = world.animate([
       {
         opacity: `0`,
         easing: `ease-out`
