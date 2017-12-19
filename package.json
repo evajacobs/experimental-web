@@ -41,9 +41,8 @@
     "webpack": "^2.2.0",
     "webpack-config-htmls": "^1.0.1",
     "webpack-config-utils": "^2.3.0",
-    "webpack-dev-server": "^2.4.1"
-  },
-  "dependencies": {
+    "webpack-dev-server": "^2.4.1",
+    "clmtrackr": "^1.1.2",
     "webaudio-buffer-loader": "^1.0.1"
   }
 }

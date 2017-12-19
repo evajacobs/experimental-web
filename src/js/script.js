@@ -11,6 +11,7 @@ import drawCircle from './lib/drawCircle';
 import drawSeconds from './lib/drawSeconds';
 
 const THREE = require(`three`);
+
 const OBJLoader = require(`three-obj-loader`);
 OBJLoader(THREE);
 
@@ -43,8 +44,10 @@ ctrack.init(pModel);
 
 delete emotionModel[`disgusted`];
 delete emotionModel[`fear`];
+
 const ec = new emotionClassifier();
 ec.init(emotionModel);
+
 
 let timer = false;
 let checkEmotions = false;
@@ -56,6 +59,7 @@ const emotionText = document.getElementsByClassName(`emotionText`);
 const emotionContainer = document.getElementsByClassName(`emotionContainer`);
 const emotionOverlay = document.getElementsByClassName(`emotionOverlay`)[0];
 const boosterOverlay = document.getElementsByClassName(`boosterOverlay`)[0];
+const blurOverlay = document.getElementsByClassName(`blurOverlay`)[0];
 
 let currentSec = 0;
 let emotion;
@@ -185,15 +189,16 @@ const animateEndscreen = () => {
     let obj = scene.children[i];
     scene.remove(obj);
   }
+
   endscreen.style.display = `flex`;
   world.style.display = `none`;
   const endscreenText = document.getElementsByClassName(`endscreenText`)[0];
-  if(won === true) {
-    endscreenText.innerHTML = `You made it to the moon!`;
-    won = false;
-  }else {
-    endscreenText.innerHTML = `GAME OVER`;
-  }
+   if(won === true) {
+     endscreenText.innerHTML = `You made it to the moon!`;
+     won = false;
+   }else {
+     endscreenText.innerHTML = `GAME OVER`;
+   }
   document.getElementsByClassName(`endscreenScore`)[0].innerHTML = `score: ${  score}`;
   document.getElementsByClassName(`play_again_button_svg`)[0].addEventListener(`click`, clickHandlerPlayAgain);
 };
@@ -487,6 +492,10 @@ const  updateTimeEmotion = () => {
     currentSec ++;
     drawSeconds(ctx, currentSec);
   }
+
+  if(currentSec === 45 && state !== `endscreen` ){
+    takepicture(emotion);
+  }
 };
 
 const checkEmotion = () => {
@@ -530,8 +539,10 @@ const removeEmotion = () => {
 
   if (!emotioncorrect) {
     renderer.domElement.classList.add(`blur`);
+    blurOverlay.classList.remove(`hidden`);
     setTimeout(() => {
       renderer.domElement.classList.remove(`blur`);
+      blurOverlay.classList.add(`hidden`);
     }, 6000);
   } else {
     boosterOverlay.classList.remove(`hidden`);
@@ -553,6 +564,7 @@ const removeEmotion = () => {
 const clickHandlerPlayAgain = () => {
   timer = false;
   boosterOverlay.classList.add(`hidden`);
+  blurOverlay.classList.add(`hidden`);
   renderer.domElement.classList.remove(`blur`);
   speedEnemey = 10;
   speedMoon = 1.5;
@@ -584,6 +596,7 @@ const clickHandlerPlayAgain = () => {
     moon = createMoon(THREE, moon, scene);
     drawLives();
     scoreElement.innerHTML = `<h1 class="scoreTitle" >score</h1> <p class="scoreText"> ${score}</p>`;
+
     world.style.display = `inline`;
     anim = world.animate([
       {
@@ -602,5 +615,35 @@ const clickHandlerPlayAgain = () => {
   });
 };
 
+const takepicture = (emotion) => {
+
+  const div = document.createElement(`div`);
+  div.classList.add(`containerVideoSnapshot`);
+
+  const canvas = document.createElement(`canvas`);
+  canvas.classList.add(`canvasVideoSnapshot`);
+
+  const img = document.createElement(`img`);
+  img.classList.add(`imgVideoSnapshot`);
+
+  const p = document.createElement(`p`);
+  p.innerHTML = emotion;
+  p.classList.add(`motionVideoSnapshot`);
+
+  const parrent = document.getElementsByClassName(`endscreenImages`)[0];
+  parrent.appendChild(div);
+  div.appendChild(canvas);
+  div.appendChild(img);
+  div.appendChild(p);
+
+  const context = canvas.getContext('2d');
+
+  context.drawImage(videoEl, 0, 0, videoEl.width, videoEl.height);
+  canvas.classList.add('hidden');
+
+  const data = canvas.toDataURL('image/png');
+  img.setAttribute('src', data);
+
+}
 
 init();
