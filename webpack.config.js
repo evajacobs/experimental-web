@@ -15,7 +15,7 @@ const extractCSS = new ExtractTextWebpackPlugin(`css/style.css`);
 
 // change for production build on different server path
 const publicPath = ``;
-// const publicPath = `/`;
+//const publicPath = `/`;
 
 const port = 3000;
 
