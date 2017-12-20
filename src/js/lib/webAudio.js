@@ -7,6 +7,7 @@ let gainNode = null;
 let collision = false;
 let collect = false;
 let loadBuffers;
+let playSound;
 
 const buffers = [`./assets/sounds/backgroundSound.mp3`, `./assets/sounds/flashbang.mp3`, `./assets/sounds/collect.wav` ];
 
@@ -14,18 +15,24 @@ const buffers = [`./assets/sounds/backgroundSound.mp3`, `./assets/sounds/flashba
 const button = document.getElementsByClassName(`soundImage`);
 const audioRange = document.getElementsByClassName(`audioRange`);
 
-export default (collisionBoolean, collectBoolean) => {
+export default (collisionBoolean, collectBoolean, playSoundBoolean) => {
 
+  playSound = playSoundBoolean
   collision = collisionBoolean;
   collect = collectBoolean;
 
-  if (!loadBuffers) {
-    loader(buffers, audioCtx, function(err, loadedBuffers) {
-      loadBuffers = loadedBuffers;
-      finishedLoading(loadedBuffers);
-    });
-  } else {
-    playCollisionOrCollect();
+  if(playSound){
+    if (!loadBuffers) {
+      loader(buffers, audioCtx, function(err, loadedBuffers) {
+        loadBuffers = loadedBuffers;
+        finishedLoading(loadedBuffers);
+      });
+    } else {
+      playCollisionOrCollect();
+    }
+  }else {
+    sourceMainAudio.stop(0);
+    sourceCollision.stop(0);
   }
 
 

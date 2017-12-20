@@ -85,6 +85,7 @@ let distancePlayer = 0;
 
 let collisionBoolean = false;
 let collectBoolean = false;
+let playSoundBoolean = true;
 
 // World - score
 let scoreElement;
@@ -130,6 +131,7 @@ const drawLoop = () => {
   if (state === `world` && firstRenderWorld === true) {
     firstRenderWorld = false;
     renderWorld();
+    playSoundBoolean = true;
   }
 
   if (state === `world`) {
@@ -146,6 +148,8 @@ const drawLoop = () => {
   if (state === `endscreen` && firstRenderEndscreen === true) {
     firstRenderEndscreen = false;
     animateScreen(world, endscreen, animateEndscreen);
+    playSoundBoolean = false;
+    webAudio(collisionBoolean, collectBoolean, playSoundBoolean);
   }
   requestAnimationFrame(drawLoop);
 };
@@ -264,7 +268,7 @@ const updateFaceData = data => {
 };
 
 const clickHandlerStart = () => {
-  webAudio(collisionBoolean, collectBoolean);
+  webAudio(collisionBoolean, collectBoolean, playSoundBoolean);
   animateScreen(instructions, world, animateWorldscreen);
 };
 
@@ -331,7 +335,7 @@ const loopWorld = () => {
       lives --;
       drawLives();
       collisionBoolean = true;
-      webAudio(collisionBoolean, collectBoolean);
+      webAudio(collisionBoolean, collectBoolean, playSoundBoolean);
     } else {
       collisionBoolean = false;
     }
@@ -351,7 +355,7 @@ const loopWorld = () => {
       }
       triangleObject.position.x = triangleXpos;
       collectBoolean = true;
-      webAudio(collisionBoolean, collectBoolean);
+      webAudio(collisionBoolean, collectBoolean, playSoundBoolean);
     } else {
       collectBoolean = false;
     }
@@ -562,57 +566,62 @@ const removeEmotion = () => {
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const clickHandlerPlayAgain = () => {
-  timer = false;
-  boosterOverlay.classList.add(`hidden`);
-  blurOverlay.classList.add(`hidden`);
-  renderer.domElement.classList.remove(`blur`);
-  speedEnemey = 10;
-  speedMoon = 1.5;
-  speedstars = 2;
-  anim = endscreen.animate([
-    {
-      opacity: `1`,
-      easing: `ease-out`
-    },
-    {
-      opacity: `0`,
-    }
-  ], {
-    fill: `forwards`,
-    duration: 300,
-    iterations: 1
-  });
-  anim.finished.then(() => {
-    state = `world`;
-    endscreen.style.display = `none`;
-    lives = 3;
-    score = 0;
-    streamVideo(videoHelmet);
-    createLights(THREE, scene);
-    player = createPlayer(THREE, OBJLoader, scene);
-    stars = createStars(THREE, scene);
-    enemies = createEnemy(THREE, enemies, scene);
-    triangles = createTriangle(THREE, triangles, triangleXpos, scene);
-    moon = createMoon(THREE, moon, scene);
-    drawLives();
-    scoreElement.innerHTML = `<h1 class="scoreTitle" >score</h1> <p class="scoreText"> ${score}</p>`;
 
-    world.style.display = `inline`;
-    anim = world.animate([
-      {
-        opacity: `0`,
-        easing: `ease-out`
-      },
-      {
-        opacity: `1`,
-      }
-    ], {
-      fill: `forwards`,
-      duration: 400,
-      iterations: 1
-    });
-
-  });
+  location.reload();
+  // timer = false;
+  // boosterOverlay.classList.add(`hidden`);
+  // blurOverlay.classList.add(`hidden`);
+  // renderer.domElement.classList.remove(`blur`);
+  // speedEnemey = 10;
+  // speedMoon = 1.5;
+  // speedstars = 2;
+  // collisionBoolean = false;
+  // collectBoolean = false;
+  //
+  // anim = endscreen.animate([
+  //   {
+  //     opacity: `1`,
+  //     easing: `ease-out`
+  //   },
+  //   {
+  //     opacity: `0`,
+  //   }
+  // ], {
+  //   fill: `forwards`,
+  //   duration: 300,
+  //   iterations: 1
+  // });
+  // anim.finished.then(() => {
+  //   state = `world`;
+  //   endscreen.style.display = `none`;
+  //   lives = 3;
+  //   score = 0;
+  //   streamVideo(videoHelmet);
+  //   createLights(THREE, scene);
+  //   player = createPlayer(THREE, OBJLoader, scene);
+  //   stars = createStars(THREE, scene);
+  //   enemies = createEnemy(THREE, enemies, scene);
+  //   triangles = createTriangle(THREE, triangles, triangleXpos, scene);
+  //   moon = createMoon(THREE, moon, scene);
+  //   drawLives();
+  //   scoreElement.innerHTML = `<h1 class="scoreTitle" >score</h1> <p class="scoreText"> ${score}</p>`;
+  //
+  //   world.style.display = `inline`;
+  //   anim = world.animate([
+  //     {
+  //       opacity: `0`,
+  //       easing: `ease-out`
+  //     },
+  //     {
+  //       opacity: `1`,
+  //     }
+  //   ], {
+  //     fill: `forwards`,
+  //     duration: 400,
+  //     iterations: 1
+  //   });
+  //
+  // });
 };
 
 const takepicture = (emotion) => {
